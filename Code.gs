@@ -1,4 +1,10 @@
 function onOpen() {
+  /** 
+  * Activate Script menu item must be called first because the 
+  * createEventsFromScript function uses Oauth and permissions 
+  * dialog will not come up when the function is called directly 
+  * from a menu
+  **/
   var menu = [{name: 'Activate Script', functionName: 'activateMyScript'},
               {name: 'Add Teacher Schedule to Google Calendar', functionName: 'createEventsFromSheet'},
               {name: 'Remove Teacher Schedules from Google Calendar', functionName: 'removeEventsFromSheet'}
@@ -10,6 +16,15 @@ function activateMyScript(){
   Browser.msgBox('Teacher Schedule has been activated!');
 }
 
+/**
+* creates calendar event for each instance of a class for the teacher
+* @param {string} className  Name of class
+* @param {string} sectionNumber    Section number of individual class
+* @param {string} startDateTime date/time for when class starts in this format (yyyy-MM-dd'T'HH:mm:ssZ)
+* @param {string} endDateTime date/time for when class ends in this format (yyyy-MM-dd'T'HH:mm:ssZ)
+* @param {string} classLocation  room number for class
+* @return {string} eventID   returns the eventID of the created event
+**/
 
 function createEvent(className, sectionNumber, startDateTime, endDateTime, classLocation) {
   var calendarId = 'primary';
@@ -104,6 +119,10 @@ function createEventsFromApi(){
   } 
 }
 
+/**
+* removes calendar events from Google sheet
+* removes eventID from each entry in the google sheet
+**/
 function removeEventsFromSheet(){
   var scriptUserEmail = Session.getActiveUser().getEmail();
   var calendarId = 'primary';
