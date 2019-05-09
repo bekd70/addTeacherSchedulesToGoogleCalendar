@@ -1,17 +1,16 @@
+//Adds "Teacher Schedules" custom Menu
 function onOpen() {
-  /** 
-  * Activate Script menu item must be called first because the 
-  * createEventsFromScript function uses Oauth and permissions 
-  * dialog will not come up when the function is called directly 
-  * from a menu
-  **/
-  var menu = [{name: 'Activate Script', functionName: 'activateMyScript'},
-              {name: 'Add Teacher Schedule to Google Calendar', functionName: 'createEventsFromSheet'},
-              {name: 'Remove Teacher Schedules from Google Calendar', functionName: 'removeEventsFromSheet'}
-             ];
+  
+  var menu = [{name: 'Remove Teacher Schedules from Google Calendar', functionName: 'removeEventsFromSheet'}];
   SpreadsheetApp.getActive().addMenu('Teacher Schedules', menu);
 }
 
+/** 
+  * Activate Script button must be called first because the 
+  * createEventsFromScript function uses Oauth and permissions 
+  * dialog will not come up when the "createEventsFromSheet" 
+  * function is called directly from a menu for a regular user
+  **/
 function activateMyScript(){
   Browser.msgBox('Teacher Schedule has been activated!');
 }
@@ -26,13 +25,19 @@ function activateMyScript(){
 * @return {string} eventID   returns the eventID of the created event
 **/
 
-function createEvent(className, sectionNumber, startDateTime, endDateTime, classLocation) {
+function createEvent(className, startDateTime, endDateTime, classLocation) {
+  //uncomment this in production
   var calendarId = 'primary';
+  //remove the below line when moving to production
+  //Bob's
+  //var calendarId = 'aes.ac.in_t1ra2v8sad3gt8hsbpuugldpd4@group.calendar.google.com'
+  //parul's
+  //var calendarId = 'aes.ac.in_nk2uc34nnvk8174ota5k4ffpms@group.calendar.google.com'
   var formattedStartDate = Utilities.formatDate(startDateTime, "GMT+5:30", "yyyy-MM-dd'T'HH:mm:ssZ");
   var formattedEndDate = Utilities.formatDate(endDateTime, "GMT+5:30", "yyyy-MM-dd'T'HH:mm:ssZ");
   
   var event = {
-    summary: className+sectionNumber,
+    summary: className,
     location: classLocation,
     start: {
       dateTime: formattedStartDate
@@ -43,102 +48,169 @@ function createEvent(className, sectionNumber, startDateTime, endDateTime, class
     reminders:{
       useDefault: false
     },
-      visibility: "public",
+    //this allows administrators to see teacher's schedule even if their
+    //primary is marked as private 
+     visibility: "public",
     // Red background. Use Calendar.Colors.get() for the full list.reminders.overrides[]
     colorId: 11
   };
   event = Calendar.Events.insert(event, calendarId);
-  var eventID = event.id;
-  Logger.log('Event ID: ' + event.id);
-  //Logger.log('Event summary: ' + event['start']['dateTime'] );
+  var eventID = event.getId();
   return eventID;
 }
 
-
 /**
-* createEventsFromSheet
-* 
-* Get data from sheet that has the events for all staff
-* get events that only belong to the user
-* 
-* 
+* Creates individual events for each class (one of every class, every day
+* that you have a class).  This function pulls the class name from the 
+* google sheet.  If the class name is blank, it will not create an event
+* for the period.  For each event created, the eventID gets saved to a 
+* logfile that you can use to delete all events at a later point.  All
+* sheets in the logfile get saved for each user in a sheet with their 
+* email address as the name.
+
 **/
+
 function createEventsFromSheet(){
   var scriptUserEmail = Session.getActiveUser().getEmail();
   Logger.log(scriptUserEmail);
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName('TeacherSchedule');
+  var sheet = ss.getSheetByName('Make Class Schedules');
+  
   var data = sheet.getDataRange().getValues();
+  //periodNames[0] is for sem1 class names, periodNames[1] is for sem2 class names
+  var periodNames = new Array(2);
+  periodNames = [new Array(8), new Array(8)];
+  //periodLocation[0] is for sem1 room numbers, periodLocation[1] is for sem2 room numbers
+  var periodLocation = new Array(2);
+  periodLocation = [new Array(8), new Array(8)];
+  
+  /**
+  * put the sheetid of the file you would like to save the 
+  * log file to here
+  **/
+  var logSs = SpreadsheetApp.openById("1dkXQ1Nv7FUNmWq3yIknLH_u9hl96gjtm5qprOqK6Gwk");
+  //check to see if log file for the user exists
+  logSheet = logSs.getSheetByName(scriptUserEmail);
+  if(!logSheet){
+    var logSheet = logSs.insertSheet(0).setName(scriptUserEmail);
+  }
+  //puts the header row on the log file
+  logSheet.appendRow(["Teacher Email", "Class Name", "Event Start Date-Time", "Event End Date-Time", "Class Location", "EventID"]);
+  
+  //add the class names and room numbers to an array
   for (var i=1; i<data.length; i++){
     var values = data[i];
-    if (values[0] == scriptUserEmail){
-      var className = values[1];
-      var sectionNumber = values[2];
-      var startDateTime = values[3];
-      var endDateTime = values[4];
-      var classLocation = values[5];
-      
-      var eventID = createEvent(className, sectionNumber, startDateTime, endDateTime, classLocation);
-      sheet.getRange("G"+(i+1)).setValue(eventID);
-    }
-  } 
-}
-
-/**
-* createEventsFromApi
-* 
-* Get data from API that has the events for staff
-* based on the email address of the user running the script
-* 
-* 
-**/
-function createEventsFromApi(){
-  var scriptUserEmail = Session.getActiveUser().getEmail();
-  Logger.log(scriptUserEmail);
-  var query = scriptUserEmail;
-  var url = 'URL TO API GOES HERE'
-  + '&scriptUserEmail=' + encodeURIComponent(query);
-
-  var response = UrlFetchApp.fetch(url, {'muteHttpExceptions': true});
-  var json = response.getContentText();
-  var data = JSON.parse(json);
+    periodNames[0][i-1] = values[1];
+    periodNames[1][i-1] = values[3];
+    periodLocation[0][i-1] = values[2];
+    periodLocation[1][i-1] = values[4];
+  }
+    /**
+    * we are using an 8 period tumbeling schedule
+    * with 4 blocks each day.  The templates used to
+    * create the events are created are in 
+    * CreateScheduleTemplates.gs.  The for loop below
+    * will need to be changed if you have a different
+    * number of periods.
+    **/
+    for (var i=0;i<8;i++){
+      var periodSheet = ss.getSheetByName("P"+(i+1));
+      var periodData = periodSheet.getDataRange().getValues();
+      //uncomment in production
+      //for ( var j=1; j<periodData.length; j++){
+      for ( var j=1; j<10; j++){
+        var periodValues = periodData[j];
+        
+        /**
+        * pulling semester info from the template files.
+        * we are only using 2 semesters for our terms
+        * if you are different, you will need to change the below to 
+        * suit your needs.
+        * This determines which column from "Make Class Schedules" is 
+        * being used to pull the event name (from sem1 or sem2).
+        **/
+        if (periodValues[3] == "Semester 1"){
+          var className = periodNames[0][i];
+        
+          var startDateTime = new Date(periodValues[1]);
+          var endDateTime = new Date(periodValues[2]);
+          var classLocation = periodLocation[0][i];
+         
+        }
+        //It must be semester 2
+        else{   
+          if (periodNames[1][i] == ""){
+            var className = "";
+          }
+          else{
+            var className = periodNames[1][i];
+          }
+        
+          var startDateTime = new Date(periodValues[1]);
+          var endDateTime = new Date(periodValues[2]);
+          var classLocation = periodLocation[1][i];
+          Logger.log("Class name: " + className +
+                     ", Start Time: " + startDateTime +
+                     ", End Time: " + endDateTime +
+                     ", Location: " + classLocation);
+        }
+        
+        /**
+        * Creates an event for each entry in each template file that 
+        * matches up with a period entry in "Make Class Schedules"
+        * It does not create an event if there is no name in the 
+        * "Make Class Schedules" for a period.  A log enty is created
+        * for every event created so that events can be removed if
+        * it need to be changed later        
+        **/
+        if(className != ""){
+          var eventID = createEvent(className, startDateTime, endDateTime, classLocation);
+          logSheet.appendRow([scriptUserEmail, className, startDateTime, endDateTime, classLocation,eventID])
+        }
+      }
+    } 
   
-  
-  for (var i=1; i<data.length; i++){
-    var values = data[i];
-    if (values[0] == scriptUserEmail){
-      var className = values[1];
-      var sectionNumber = values[2];
-      var startDateTime = values[3];
-      var endDateTime = values[4];
-      var classLocation = values[5];
-      
-      var eventID = createEvent(className, sectionNumber, startDateTime, endDateTime, classLocation);
-      sheet.getRange("G"+(i+1)).setValue(eventID);
-    }
-  } 
 }
 
 /**
 * removes calendar events from Google sheet
 * removes eventID from each entry in the google sheet
+* for each user that has run the script.  Each user has
+* their own log sheet with their eventIDs that were
+* save when they ran the script.
+* The function is run from the "Teacher Schedules"
+* custom menu.
 **/
 function removeEventsFromSheet(){
   var scriptUserEmail = Session.getActiveUser().getEmail();
   var calendarId = 'primary';
-  Logger.log(scriptUserEmail);
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName('TeacherSchedule');
+  //replace with the spreadsheetID of your logsheet
+  var ss = SpreadsheetApp.openById("1dkXQ1Nv7FUNmWq3yIknLH_u9hl96gjtm5qprOqK6Gwk");
+  // gets the sheetname for the logsheet for the user.  It will be the user's email address
+  var sheet = ss.getSheetByName(scriptUserEmail);
   var data = sheet.getDataRange().getValues();
   
   for (var i=1; i<data.length; i++){
-    var values = data[i];
-    if (values[0] == scriptUserEmail){
-      var calendarEventID = values[6];
-      removeEvent = Calendar.Events.remove(calendarId, calendarEventID);
-      //sheet.getRange("G"+(i+1)).setValue("");
-      sheet.getRange("G"+(i+1)).clear()
-      
-    }
+    var eventId = data[i][5];
+    var removeEvent = Calendar.Events.remove(calendarId, eventId);
   }
+  //deletes sheet after all events have been deleted
+  ss.deleteSheet(sheet)
+}
+
+/**
+* used when testing to clear out the calendar of all the events that are going to
+* a testing calendar.  Not used in production
+**/
+function deleteAllEvents(){
+    //replace with your calendar ID
+    var cal = CalendarApp.getCalendarById("aes.ac.in_t1ra2v8sad3gt8hsbpuugldpd4@group.calendar.google.com");
+    var events = cal.getEvents(new Date("July 31, 2018 00:00:00"), new Date("June 1, 2019 00:00:00 +530"));
+    for(var i=0;i<events.length;i++){
+      var ev = events[i];
+      ev.deleteEvent();
+      //added this when I started getting the below error
+      //Service invoked too many times in a short time: Calendar
+      Utilities.sleep(250)
+    }
 }
