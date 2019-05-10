@@ -49,11 +49,12 @@ function createScheduleTemplates (){
   
   for (var i=1; i<=8; i++){
     var sheetCount = ss.getNumSheets();
-    var newSheet = ss.insertSheet(sheetCount).setName("P" + i);
+    var newSheet = ss.insertSheet(sheetCount).setName("P" + i).hideSheet();
     var newSheetID = newSheet.getSheetId();
     var newSheetName = newSheet.getName();
     var newSheetLink = ssUrl + "#gid=" + newSheetID;
     sheet.appendRow([newSheetName,newSheetID,newSheetLink]);
+    newSheet.appendRow(["Class Name", "StartDateTime", "EndDateTime", "Term"])
   }
 }
 
@@ -72,6 +73,9 @@ function deleteScheduleTemplates(){
 }
 
 function populateTemplates(){
+  //clears previous entries from template
+  clearTemplates();
+  
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var ssUrl = ss.getUrl();
   var p1Sheet = ss.getSheetByName("P1");
