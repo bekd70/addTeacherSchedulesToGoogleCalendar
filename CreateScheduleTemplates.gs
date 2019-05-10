@@ -10,7 +10,7 @@ function getDayOfWeek(A) {
   weekdays[5] = "Friday";
   weekdays[6] = "Saturday";
   var dayOfWeek = weekdays[A.getDay()];
-  return dayOfWeek
+  return dayOfWeek;
 }
 
 /**
@@ -49,8 +49,22 @@ function createScheduleTemplates (){
   
   for (var i=1; i<=8; i++){
     var sheetCount = ss.getNumSheets();
-    var newSheet = ss.insertSheet(sheetCount).setName("P" + i).hideSheet();
-    var newSheetID = newSheet.getSheetId();
+    //check to see if sheet already exists
+    var newSheet = ss.getSheetByName("P" + i);
+    var newSheetName = "";
+    var newSheetID = "";
+    if (!newSheet){
+      var newSheet = ss.insertSheet(sheetCount).setName("P" + i).hideSheet();
+      newSheetName = newSheet.getName();
+      newSheetID = newSheet.getSheetId();
+    }
+    else{
+      newSheetName = newSheet.getName();
+      newSheetID = newSheet.getSheetId();
+      clearTemplate(newSheetName);
+    }
+      
+    
     var newSheetName = newSheet.getName();
     var newSheetLink = ssUrl + "#gid=" + newSheetID;
     sheet.appendRow([newSheetName,newSheetID,newSheetLink]);
@@ -212,6 +226,16 @@ function populateTemplates(){
 }
 
 //not used in production.  Clears out P1-P8 templates
+function clearTemplate(newSheetName){
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  var periodSheet = ss.getSheetByName(newSheetName);
+  var range = periodSheet.getRange(1, 1, periodSheet.getLastRow()+1, 4);
+  range.clear();
+  
+    
+
+}
 function clearTemplates(){
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   for (var i=0;i<8;i++){

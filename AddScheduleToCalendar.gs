@@ -28,11 +28,7 @@ function activateMyScript(){
 function createEvent(className, startDateTime, endDateTime, classLocation) {
   //uncomment this in production
   var calendarId = 'primary';
-  //remove the below line when moving to production
-  //Bob's
-  //var calendarId = 'aes.ac.in_t1ra2v8sad3gt8hsbpuugldpd4@group.calendar.google.com'
-  //parul's
-  //var calendarId = 'aes.ac.in_nk2uc34nnvk8174ota5k4ffpms@group.calendar.google.com'
+
   var formattedStartDate = Utilities.formatDate(startDateTime, "GMT+5:30", "yyyy-MM-dd'T'HH:mm:ssZ");
   var formattedEndDate = Utilities.formatDate(endDateTime, "GMT+5:30", "yyyy-MM-dd'T'HH:mm:ssZ");
   
@@ -116,7 +112,7 @@ function createEventsFromSheet(){
     for (var i=0;i<8;i++){
       var periodSheet = ss.getSheetByName("P"+(i+1));
       var periodData = periodSheet.getDataRange().getValues();
-      //uncomment in production
+      
       for ( var j=1; j<periodData.length; j++){
         var periodValues = periodData[j];
         
@@ -148,10 +144,7 @@ function createEventsFromSheet(){
           var startDateTime = new Date(periodValues[1]);
           var endDateTime = new Date(periodValues[2]);
           var classLocation = periodLocation[1][i];
-          Logger.log("Class name: " + className +
-                     ", Start Time: " + startDateTime +
-                     ", End Time: " + endDateTime +
-                     ", Location: " + classLocation);
+          
         }
         
         /**
