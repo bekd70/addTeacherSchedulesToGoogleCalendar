@@ -47,7 +47,7 @@ function createScheduleTemplates (){
   var sheet = ss.getSheetByName("Schedule Templates");
   sheet.appendRow(["Sheet Name","Sheet ID","Sheet Link"]);
   
-  for (var i=1; i<=8; i++){
+  for (var i=1; i<=9; i++){
     var sheetCount = ss.getNumSheets();
     //check to see if sheet already exists
     var newSheet = ss.getSheetByName("P" + i);
@@ -100,15 +100,16 @@ function populateTemplates(){
   var p6Sheet = ss.getSheetByName("P6");
   var p7Sheet = ss.getSheetByName("P7");
   var p8Sheet = ss.getSheetByName("P8");
+  var p9Sheet =ss.getSheetByName("P9");
   
   /**
   * first day of your regular of each term (Sem1 & Sem2 for us).  
   * We are in GMT+5:30.  Change for your timezone
   * to fit your needs.
   **/
-  var firstDay = [new Date('August 07, 2018 00:00:00 +0530'),new Date('January 01, 2019 00:00:00 +0530')];
+  var firstDay = [new Date('August 07, 2019 00:00:00 +0530'),new Date('January 13, 2020 00:00:00 +0530')];
   //last day of each term
-  var lastDay = [new Date('December 21, 2018 15:30:00 +0530'),new Date('May 31, 2019 15:30:00 +0530')];
+  var lastDay = [new Date('December 19, 2019 15:30:00 +0530'),new Date('May 28, 2020 15:30:00 +0530')];
     //iterate each semester
     for(var i = 0;i<2;i++){
       //initialize to day schedule.  We are on a 1-8 day schedule
@@ -131,23 +132,27 @@ function populateTemplates(){
           **/
           if (currentDay.getDay() == 3){
             var blockOneStart = "T08:30:00";
-            var blockOneFinish = "T09:40:00";
-            var blockTwoStart = "T10:10:00";
-            var blockTwoFinish = "T11:20:00";
-            var blockThreeStart = "T12:00:00";
+            var blockOneFinish = "T09:35:00";
+            var blockTwoStart = "T09:50:00";
+            var blockTwoFinish = "T10:55:00";
+            var blockThreeStart = "T12:05:00";
             var blockThreeFinish = "T13:10:00";
-            var blockFourStart = "T13:20:00";
+            var blockFourStart = "T13:25:00";
             var blockFourFinish = "T14:30:00";
+            var advStart = "T11:35:00";
+            var advFinish = "T12:00:00";
           }
           else{
             var blockOneStart = "T08:30:00";
-            var blockOneFinish = "T09:55:00";
-            var blockTwoStart = "T10:25:00";
-            var blockTwoFinish = "T11:50:00";
-            var blockThreeStart = "T12:35:00";
+            var blockOneFinish = "T09:50:00";
+            var blockTwoStart = "T10:10:00";
+            var blockTwoFinish = "T11:30:00";
+            var blockThreeStart = "T12:40:00";
             var blockThreeFinish = "T14:00:00";
-            var blockFourStart = "T14:10:00";
+            var blockFourStart = "T14:15:00";
             var blockFourFinish = "T15:35:00";
+            var advStart = "T12:10:00";
+            var advFinish = "T12:35:00";
           }
           /**
           * Gets the day (1-8) and adds an entry to the period
@@ -163,48 +168,63 @@ function populateTemplates(){
               p2Sheet.appendRow(["P2",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p3Sheet.appendRow(["P3",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p4Sheet.appendRow(["P4",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
+              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
               break;
             case 2:
               p5Sheet.appendRow(["P5",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneFinish, semester])
               p6Sheet.appendRow(["P6",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p7Sheet.appendRow(["P7",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p8Sheet.appendRow(["P8",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
+              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              
               break;
             case 3:
               p2Sheet.appendRow(["P2",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneFinish, semester])
               p3Sheet.appendRow(["P3",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p4Sheet.appendRow(["P4",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p1Sheet.appendRow(["P1",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
+              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              
               break;
             case 4:
               p6Sheet.appendRow(["P6",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneFinish, semester])
               p7Sheet.appendRow(["P7",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p8Sheet.appendRow(["P8",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p5Sheet.appendRow(["P5",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish,semester])
+              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              
               break;
             case 5:
               p3Sheet.appendRow(["P3",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneFinish, semester])
               p4Sheet.appendRow(["P4",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p1Sheet.appendRow(["P1",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p2Sheet.appendRow(["P2",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
+              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              
               break;
             case 6:
               p7Sheet.appendRow(["P7",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneFinish, semester])
               p8Sheet.appendRow(["P8",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p5Sheet.appendRow(["P5",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p6Sheet.appendRow(["P6",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
+              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              
               break;
             case 7:
               p4Sheet.appendRow(["P4",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneFinish, semester])
               p1Sheet.appendRow(["P1",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p2Sheet.appendRow(["P2",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p3Sheet.appendRow(["P3",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
+              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              
               break;
             case 8:
               p8Sheet.appendRow(["P8",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneFinish, semester])
               p5Sheet.appendRow(["P5",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p6Sheet.appendRow(["P6",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p7Sheet.appendRow(["P7",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
+              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              
               break;   
           }
           //increments the day, unless it is day 8 and the starts over
@@ -225,7 +245,7 @@ function populateTemplates(){
   } 
 }
 
-//not used in production.  Clears out P1-P8 templates
+
 function clearTemplate(newSheetName){
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
@@ -238,7 +258,7 @@ function clearTemplate(newSheetName){
 }
 function clearTemplates(){
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  for (var i=0;i<8;i++){
+  for (var i=0;i<9;i++){
     var periodSheet = ss.getSheetByName("P"+(i+1));
     var range = periodSheet.getRange(2, 1, periodSheet.getLastRow(), 4);
     range.clear();

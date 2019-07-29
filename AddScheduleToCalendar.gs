@@ -68,7 +68,7 @@ function createEvent(className, startDateTime, endDateTime, classLocation) {
 
 function createEventsFromSheet(){
   var scriptUserEmail = Session.getActiveUser().getEmail();
-  Logger.log(scriptUserEmail);
+  //Logger.log(scriptUserEmail);
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName('Make Class Schedules');
   
@@ -84,11 +84,11 @@ function createEventsFromSheet(){
   * put the sheetid of the file you would like to save the 
   * log file to here
   **/
-  var logSs = SpreadsheetApp.openById("1dkXQ1Nv7FUNmWq3yIknLH_u9hl96gjtm5qprOqK6Gwk");
+  //var logSs = SpreadsheetApp.openById("1dkXQ1Nv7FUNmWq3yIknLH_u9hl96gjtm5qprOqK6Gwk");
   //check to see if log file for the user exists
-  logSheet = logSs.getSheetByName(scriptUserEmail);
+  var logSheet = ss.getSheetByName(scriptUserEmail);
   if(!logSheet){
-    var logSheet = logSs.insertSheet(0).setName(scriptUserEmail);
+    var logSheet = ss.insertSheet(0).setName(scriptUserEmail).hideSheet();
   }
   //puts the header row on the log file
   logSheet.appendRow(["Teacher Email", "Class Name", "Event Start Date-Time", "Event End Date-Time", "Class Location", "EventID"]);
@@ -109,7 +109,7 @@ function createEventsFromSheet(){
     * will need to be changed if you have a different
     * number of periods.
     **/
-    for (var i=0;i<8;i++){
+    for (var i=0;i<9;i++){
       var periodSheet = ss.getSheetByName("P"+(i+1));
       var periodData = periodSheet.getDataRange().getValues();
       
@@ -177,7 +177,7 @@ function removeEventsFromSheet(){
   var scriptUserEmail = Session.getActiveUser().getEmail();
   var calendarId = 'primary';
   //replace with the spreadsheetID of your logsheet
-  var ss = SpreadsheetApp.openById("1dkXQ1Nv7FUNmWq3yIknLH_u9hl96gjtm5qprOqK6Gwk");
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
   // gets the sheetname for the logsheet for the user.  It will be the user's email address
   var sheet = ss.getSheetByName(scriptUserEmail);
   var data = sheet.getDataRange().getValues();
