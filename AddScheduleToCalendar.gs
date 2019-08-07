@@ -89,9 +89,10 @@ function createEventsFromSheet(){
   var logSheet = ss.getSheetByName(scriptUserEmail);
   if(!logSheet){
     var logSheet = ss.insertSheet(0).setName(scriptUserEmail).hideSheet();
-  }
-  //puts the header row on the log file
+    //puts the header row on the log file
   logSheet.appendRow(["Teacher Email", "Class Name", "Event Start Date-Time", "Event End Date-Time", "Class Location", "EventID"]);
+  }
+  
   
   //add the class names and room numbers to an array
   for (var i=1; i<data.length; i++){
@@ -178,13 +179,18 @@ function removeEventsFromSheet(){
   var calendarId = 'primary';
   //replace with the spreadsheetID of your logsheet
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+  //var ss = SpreadsheetApp.openById("1dkXQ1Nv7FUNmWq3yIknLH_u9hl96gjtm5qprOqK6Gwk");
   // gets the sheetname for the logsheet for the user.  It will be the user's email address
   var sheet = ss.getSheetByName(scriptUserEmail);
   var data = sheet.getDataRange().getValues();
   
   for (var i=1; i<data.length; i++){
     var eventId = data[i][5];
-    var removeEvent = Calendar.Events.remove(calendarId, eventId);
+    var eventExists = Calendar.Events.get(calendarId, eventId).status;
+    Logger.log(eventExists);
+    if(eventExists != "cancelled"){
+      var removeEvent = Calendar.Events.remove(calendarId, eventId);
+    }
   }
   //deletes sheet after all events have been deleted
   ss.deleteSheet(sheet)

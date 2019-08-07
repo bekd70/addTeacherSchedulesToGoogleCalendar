@@ -132,27 +132,27 @@ function populateTemplates(){
           **/
           if (currentDay.getDay() == 3){
             var blockOneStart = "T08:30:00";
-            var blockOneFinish = "T09:35:00";
-            var blockTwoStart = "T09:50:00";
-            var blockTwoFinish = "T10:55:00";
-            var blockThreeStart = "T12:05:00";
-            var blockThreeFinish = "T13:10:00";
-            var blockFourStart = "T13:25:00";
+            var blockOneFinish = "T09:40:00";
+            var blockTwoStart = "T09:55:00";
+            var blockTwoFinish = "T11:05:00";
+            var blockThreeStart = "T11:55:00";
+            var blockThreeFinish = "T13:05:00";
+            var blockFourStart = "T13:20:00";
             var blockFourFinish = "T14:30:00";
             var advStart = "T11:35:00";
             var advFinish = "T12:00:00";
           }
           else{
             var blockOneStart = "T08:30:00";
-            var blockOneFinish = "T09:50:00";
+            var blockOneFinish = "T09:55:00";
             var blockTwoStart = "T10:10:00";
-            var blockTwoFinish = "T11:30:00";
-            var blockThreeStart = "T12:40:00";
+            var blockTwoFinish = "T11:35:00";
+            var blockThreeStart = "T12:35:00";
             var blockThreeFinish = "T14:00:00";
-            var blockFourStart = "T14:15:00";
+            var blockFourStart = "T14:10:00";
             var blockFourFinish = "T15:35:00";
-            var advStart = "T12:10:00";
-            var advFinish = "T12:35:00";
+            var advStart = "T11:35:00";
+            var advFinish = "T11:55:00";
           }
           /**
           * Gets the day (1-8) and adds an entry to the period
@@ -168,14 +168,14 @@ function populateTemplates(){
               p2Sheet.appendRow(["P2",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p3Sheet.appendRow(["P3",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p4Sheet.appendRow(["P4",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
-              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              if (currentDay.getDay() != 3){p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])}
               break;
             case 2:
               p5Sheet.appendRow(["P5",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockOneFinish, semester])
               p6Sheet.appendRow(["P6",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p7Sheet.appendRow(["P7",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p8Sheet.appendRow(["P8",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
-              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              if (currentDay.getDay() != 3){ p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])}
               
               break;
             case 3:
@@ -183,7 +183,7 @@ function populateTemplates(){
               p3Sheet.appendRow(["P3",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p4Sheet.appendRow(["P4",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p1Sheet.appendRow(["P1",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
-              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              if (currentDay.getDay() != 3){p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])}
               
               break;
             case 4:
@@ -191,7 +191,7 @@ function populateTemplates(){
               p7Sheet.appendRow(["P7",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p8Sheet.appendRow(["P8",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p5Sheet.appendRow(["P5",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish,semester])
-              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              if (currentDay.getDay() != 3){p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])}
               
               break;
             case 5:
@@ -199,7 +199,7 @@ function populateTemplates(){
               p4Sheet.appendRow(["P4",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p1Sheet.appendRow(["P1",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p2Sheet.appendRow(["P2",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
-              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              if (currentDay.getDay() != 3){p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])}
               
               break;
             case 6:
@@ -207,7 +207,7 @@ function populateTemplates(){
               p8Sheet.appendRow(["P8",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p5Sheet.appendRow(["P5",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p6Sheet.appendRow(["P6",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
-              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              if (currentDay.getDay() != 3){p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])}
               
               break;
             case 7:
@@ -215,7 +215,7 @@ function populateTemplates(){
               p1Sheet.appendRow(["P1",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p2Sheet.appendRow(["P2",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p3Sheet.appendRow(["P3",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
-              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              if (currentDay.getDay() != 3){p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])}
               
               break;
             case 8:
@@ -223,7 +223,7 @@ function populateTemplates(){
               p5Sheet.appendRow(["P5",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockTwoFinish, semester])
               p6Sheet.appendRow(["P6",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockThreeFinish, semester])
               p7Sheet.appendRow(["P7",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+blockFourFinish, semester])
-              p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])
+              if (currentDay.getDay() != 3){p9Sheet.appendRow(["P9",Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advStart,Utilities.formatDate(currentDay,"GMT+5:30", "yyyy-MM-dd")+advFinish, semester])}
               
               break;   
           }
